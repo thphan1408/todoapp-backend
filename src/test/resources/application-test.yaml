@@ -1,0 +1,19 @@
+server:
+  port: 0  # test không cần chạy cổng nào cả
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+
+# Tắt security nếu bạn dùng Spring Security (không bắt buộc)
+# spring:
+#   security:
+#     enabled: false
