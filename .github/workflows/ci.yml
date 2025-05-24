@@ -42,5 +42,5 @@ jobs:
       run: mvn install --no-transfer-progress
 
     # 6. Upload dependency graph (Dependabot)
-    - name: 📈 Update dependency graph
-      uses: advanced-security/maven-dependency-submission-action@v4
+    # - name: 📈 Update dependency graph
+    #   uses: advanced-security/maven-dependency-submission-action@v4
