@@ -6,12 +6,11 @@ import lombok.experimental.FieldDefaults;
 
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public enum TaskStatus {
-	TODO("Cần làm"), IN_PROGRESS("Đang làm"), DONE("Hoàn thành");
-
+public enum GenderUser {
+	MALE("Nam"), FEMALE("Nữ"), OTHER("Khác");
 	String label;
 
-	TaskStatus(String label) {
+	GenderUser(String label) {
 		this.label = label;
 	}
 }

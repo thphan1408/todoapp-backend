@@ -3,7 +3,7 @@ package com.thanhdev.todoapp_backend.service;
 import com.thanhdev.todoapp_backend.dto.request.TaskCreationRequest;
 import com.thanhdev.todoapp_backend.dto.request.TaskUpdateRequest;
 import com.thanhdev.todoapp_backend.dto.response.TaskResponse;
-import com.thanhdev.todoapp_backend.entity.Task;
+import com.thanhdev.todoapp_backend.entity.Tasks;
 import com.thanhdev.todoapp_backend.exception.AppException;
 import com.thanhdev.todoapp_backend.exception.ErrorCode;
 import com.thanhdev.todoapp_backend.mapper.TaskMapper;
@@ -25,7 +25,7 @@ public class TaskService {
 	TaskMapper taskMapper;
 
 
-	public Task createTask(TaskCreationRequest request) {
+	public Tasks createTask(TaskCreationRequest request) {
 		if (request.getStatus() == null) {
 			throw new AppException(ErrorCode.INVALID_TASK_STATUS);
 		}
@@ -35,12 +35,12 @@ public class TaskService {
 		//			throw new AppException(ErrorCode.INVALID_TASK_STATUS);
 		//		}
 
-		Task task = taskMapper.toTask(request);
+		Tasks tasks = taskMapper.toTask(request);
 
-		return taskRepository.save(task);
+		return taskRepository.save(tasks);
 	}
 
-	public List<Task> getTask() {return taskRepository.findAll();}
+	public List<Tasks> getTask() {return taskRepository.findAll();}
 
 	public TaskResponse getTaskById(String taskId) {
 		return taskMapper.toTaskResponse(taskRepository.findById(taskId)
@@ -48,18 +48,18 @@ public class TaskService {
 	}
 
 	public TaskResponse updateTask(String taskId, TaskUpdateRequest request) {
-		Task task = taskRepository.findById(taskId)
-		                          .orElseThrow(() -> new AppException(ErrorCode.TASK_NOT_FOUND));
+		Tasks tasks = taskRepository.findById(taskId)
+		                            .orElseThrow(() -> new AppException(ErrorCode.TASK_NOT_FOUND));
 
-		taskMapper.updateTask(task, request);
+		taskMapper.updateTask(tasks, request);
 
-		return taskMapper.toTaskResponse(taskRepository.save(task));
+		return taskMapper.toTaskResponse(taskRepository.save(tasks));
 	}
 
 	public void deleteTask(String taskId) {
-		Task task = taskRepository.findById(taskId)
-		                          .orElseThrow(() -> new AppException(ErrorCode.TASK_NOT_FOUND));
+		Tasks tasks = taskRepository.findById(taskId)
+		                            .orElseThrow(() -> new AppException(ErrorCode.TASK_NOT_FOUND));
 
-		taskRepository.delete(task);
+		taskRepository.delete(tasks);
 	}
 }

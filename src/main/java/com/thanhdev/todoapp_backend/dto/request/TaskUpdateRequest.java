@@ -15,11 +15,11 @@ import java.time.LocalDate;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TaskUpdateRequest {
-	@NotBlank(message = "Tiêu đề không được để trống")
+	@NotBlank(message = "TASK_TITLE_REQUIRED")
 	String title;
 	String description;
 	LocalDate dueDate;
 
-	@NotNull(message = "Trạng thái task là bắt buộc")
+	@NotNull(message = "TASK_STATUS_REQUIRED")
 	TaskStatus status;
 }
