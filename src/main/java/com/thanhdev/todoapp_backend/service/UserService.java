@@ -11,6 +11,8 @@ import com.thanhdev.todoapp_backend.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,6 +31,10 @@ public class UserService {
 
 		Users users = userMapper.toUser(request);
 
+		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
+
+		users.setPassword(passwordEncoder.encode(request.getPassword()));
+
 		return userRepository.save(users);
 	}
 
@@ -46,6 +52,10 @@ public class UserService {
 		                            .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
 		userMapper.updateUser(users, request);
+
+		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
+
+		users.setPassword(passwordEncoder.encode(request.getPassword()));
 
 		return userMapper.toUserResponse(userRepository.save(users));
 	}

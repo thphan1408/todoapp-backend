@@ -11,6 +11,7 @@ public enum ErrorCode {
 	TASK_NOT_FOUND(404, "Task not found"),
 	USER_NOT_FOUND(404, "User not found"),
 	USER_EXISTED(400, "User already existed"),
+	USER_NOT_EXISTED(404, "User not existed"),
 	USERNAME_INVALID(400, "Username is invalid or missing"),
 	PASSWORD_INVALID(400, "Password is invalid or missing"),
 
