@@ -52,7 +52,7 @@ public class AuthenticationService {
 		var verified = signedJWT.verify(verifier);
 
 		return IntrospectResponse.builder()
-		                         .valid(verified && expiryTime.after(new Date()))
+		                         .isValid(verified && expiryTime.after(new Date()))
 		                         .build();
 	}
 
@@ -70,7 +70,7 @@ public class AuthenticationService {
 
 		return AuthenticationResponse.builder()
 		                             .token(token)
-		                             .authenticated(true)
+		                             .isAuthenticated(true)
 		                             .build();
 	}
 
