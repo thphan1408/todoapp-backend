@@ -1,4 +1,4 @@
-package com.thanhdev.todoapp_backend.dto.response;
+package com.thanhdev.todoapp_backend.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,7 +8,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AuthenticationResponse {
-	boolean isAuthenticated;
+public class IntrospectRequest {
 	String token;
 }

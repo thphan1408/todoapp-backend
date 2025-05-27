@@ -1,8 +1,10 @@
 package com.thanhdev.todoapp_backend.exception;
 
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
+@Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public enum ErrorCode {
 	INVALID_KEY(400, "Invalid message key"),
@@ -14,7 +16,7 @@ public enum ErrorCode {
 	USER_NOT_EXISTED(404, "User not existed"),
 	USERNAME_INVALID(400, "Username is invalid or missing"),
 	PASSWORD_INVALID(400, "Password is invalid or missing"),
-
+	UNAUTHENTICATED(401, "Unauthenticated"),
 	EMAIL_REQUIRED(400, "Email is required"),
 	EMAIL_BLANK(400, "Email must not be blank"),
 	EMAIL_INVALID(400, "Email format is invalid"),
@@ -31,13 +33,5 @@ public enum ErrorCode {
 	ErrorCode(int code, String message) {
 		this.code = code;
 		this.message = message;
-	}
-
-	public int getCode() {
-		return code;
-	}
-
-	public String getMessage() {
-		return message;
 	}
 }
