@@ -14,4 +14,4 @@ spring:
     show-sql: true
 
 jwt:
-  signerKey: "ziZgGScH9Jeq/H0VGuF/jFx0YYKZpjvYOL9ZbTpsP/DNefqqiYn6+ZZ6aOkn7IHqziZgGScH9Jeq/H0VGuF/jFx0YYKZpjvYOL9ZbTpsP/DNefqqiYn6+ZZ6aOkn7IHq"
+  signerKey: "0gEKAXFRNhXbZZUa/Mz8/7sqhA4qF3yteUE4yIg4liX4yF3VuoWxh/GtgQ1RRE4VcDTqT0+D9DjL12Ixdec1tRuWshsGDyNS5uymtiPdihc="
