@@ -9,6 +9,7 @@ import com.thanhdev.todoapp_backend.dto.request.AuthenticationRequest;
 import com.thanhdev.todoapp_backend.dto.request.IntrospectRequest;
 import com.thanhdev.todoapp_backend.dto.response.AuthenticationResponse;
 import com.thanhdev.todoapp_backend.dto.response.IntrospectResponse;
+import com.thanhdev.todoapp_backend.entity.Users;
 import com.thanhdev.todoapp_backend.exception.AppException;
 import com.thanhdev.todoapp_backend.exception.ErrorCode;
 import com.thanhdev.todoapp_backend.repository.UserRepository;
@@ -21,11 +22,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.StringJoiner;
 
 @Service
 @RequiredArgsConstructor
@@ -66,7 +69,7 @@ public class AuthenticationService {
 
 		if (!authenticated) throw new AppException(ErrorCode.UNAUTHENTICATED);
 
-		var token = generateToken(request.getUsername(), user.getId());
+		var token = generateToken(user);
 
 		return AuthenticationResponse.builder()
 		                             .token(token)
@@ -74,16 +77,17 @@ public class AuthenticationService {
 		                             .build();
 	}
 
-	private String generateToken(String username, String userId) {
+	private String generateToken(Users users) {
 		JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
-		JWTClaimsSet jwtClaimSet = new JWTClaimsSet.Builder().subject(username)
+		JWTClaimsSet jwtClaimSet = new JWTClaimsSet.Builder().subject(users.getUsername())
 		                                                     .issuer("thanhdev.com")
 		                                                     .issueTime(new Date())
 		                                                     .expirationTime(new Date(Instant.now()
 		                                                                                     .plus(1, ChronoUnit.HOURS)
 		                                                                                     .toEpochMilli()))
-		                                                     .claim("userId", userId)
+		                                                     .claim("userId", users.getId())
+		                                                     .claim("scope", buildScope(users))
 		                                                     .build();
 
 		Payload payload = new Payload(jwtClaimSet.toJSONObject());
@@ -96,5 +100,15 @@ public class AuthenticationService {
 			log.error("Cannot create token: ", e);
 			throw new RuntimeException(e);
 		}
+	}
+
+	private String buildScope(Users users) {
+		StringJoiner stringJoiner = new StringJoiner(" ");
+		if (!CollectionUtils.isEmpty(users.getRoles())) {
+			users.getRoles()
+			     .forEach(stringJoiner::add);
+		}
+
+		return stringJoiner.toString();
 	}
 }

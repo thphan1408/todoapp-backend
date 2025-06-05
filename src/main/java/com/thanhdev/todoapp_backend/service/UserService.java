@@ -4,6 +4,7 @@ import com.thanhdev.todoapp_backend.dto.request.UserCreationRequest;
 import com.thanhdev.todoapp_backend.dto.request.UserUpdateRequest;
 import com.thanhdev.todoapp_backend.dto.response.UserResponse;
 import com.thanhdev.todoapp_backend.entity.Users;
+import com.thanhdev.todoapp_backend.enums.RoleUser;
 import com.thanhdev.todoapp_backend.exception.AppException;
 import com.thanhdev.todoapp_backend.exception.ErrorCode;
 import com.thanhdev.todoapp_backend.mapper.UserMapper;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -23,19 +25,23 @@ import java.util.List;
 public class UserService {
 	UserRepository userRepository;
 	UserMapper userMapper;
+	PasswordEncoder passwordEncoder;
 
-	public Users createUser(UserCreationRequest request) {
+	public UserResponse createUser(UserCreationRequest request) {
 		if (userRepository.existsByUsername(request.getUsername())) {
 			throw new AppException(ErrorCode.USER_EXISTED);
 		}
 
 		Users users = userMapper.toUser(request);
 
-		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
-
 		users.setPassword(passwordEncoder.encode(request.getPassword()));
 
-		return userRepository.save(users);
+		HashSet<String> roles = new HashSet<String>();
+		roles.add(RoleUser.USER.name());
+
+		users.setRoles(roles);
+
+		return userMapper.toUserResponse(userRepository.save(users));
 	}
 
 	public List<Users> getAllUser() {

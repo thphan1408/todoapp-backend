@@ -10,11 +10,13 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("/users")
 @RestController
@@ -24,8 +26,8 @@ public class UserController {
 	UserService userService;
 
 	@PostMapping()
-	ApiResponse<Users> createUser(@Valid @RequestBody UserCreationRequest request) {
-		return ApiResponse.<Users>builder()
+	ApiResponse<UserResponse> createUser(@Valid @RequestBody UserCreationRequest request) {
+		return ApiResponse.<UserResponse>builder()
 		                  .message("Create new user success")
 		                  .result(userService.createUser(request))
 		                  .build();
@@ -33,6 +35,15 @@ public class UserController {
 
 	@GetMapping()
 	ApiResponse<List<Users>> getUsers() {
+
+		//		var authentication = SecurityContextHolder.getContext()
+		//		                                          .getAuthentication();
+		//
+		//		log.info("Username: {}", authentication.getName());
+		//		authentication.getAuthorities()
+		//		              .forEach(grantedAuthority -> log.info("Role: {}", grantedAuthority.getAuthority()));
+
+
 		return ApiResponse.<List<Users>>builder()
 		                  .message("Get user by id success")
 		                  .result(userService.getAllUser())
