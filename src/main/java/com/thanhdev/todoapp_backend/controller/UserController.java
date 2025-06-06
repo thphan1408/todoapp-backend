@@ -4,7 +4,6 @@ import com.thanhdev.todoapp_backend.dto.request.UserCreationRequest;
 import com.thanhdev.todoapp_backend.dto.request.UserUpdateRequest;
 import com.thanhdev.todoapp_backend.dto.response.ApiResponse;
 import com.thanhdev.todoapp_backend.dto.response.UserResponse;
-import com.thanhdev.todoapp_backend.entity.Users;
 import com.thanhdev.todoapp_backend.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -34,7 +33,7 @@ public class UserController {
 	}
 
 	@GetMapping()
-	ApiResponse<List<Users>> getUsers() {
+	ApiResponse<List<UserResponse>> getUsers() {
 
 		//		var authentication = SecurityContextHolder.getContext()
 		//		                                          .getAuthentication();
@@ -44,7 +43,7 @@ public class UserController {
 		//		              .forEach(grantedAuthority -> log.info("Role: {}", grantedAuthority.getAuthority()));
 
 
-		return ApiResponse.<List<Users>>builder()
+		return ApiResponse.<List<UserResponse>>builder()
 		                  .message("Get user by id success")
 		                  .result(userService.getAllUser())
 		                  .build();
@@ -55,6 +54,14 @@ public class UserController {
 		return ApiResponse.<UserResponse>builder()
 		                  .message("Get user by id success")
 		                  .result(userService.getUserById(userId))
+		                  .build();
+	}
+
+	@GetMapping("/myInfo")
+	ApiResponse<UserResponse> getMyInfo() {
+		return ApiResponse.<UserResponse>builder()
+		                  .message("Get my info success")
+		                  .result(userService.getMyInfo())
 		                  .build();
 	}
 

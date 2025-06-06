@@ -12,6 +12,10 @@ import com.thanhdev.todoapp_backend.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -44,11 +49,33 @@ public class UserService {
 		return userMapper.toUserResponse(userRepository.save(users));
 	}
 
-	public List<Users> getAllUser() {
-		return userRepository.findAll();
+	public UserResponse getMyInfo() {
+		var context = SecurityContextHolder.getContext();
+
+		String name = context.getAuthentication()
+		                     .getName();
+
+		Users users = userRepository.findByUsername(name)
+		                            .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+		return userMapper.toUserResponse(users);
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
+	public List<UserResponse> getAllUser() {
+
+		log.info("In method get Users");
+		return userRepository.findAll()
+		                     .stream()
+		                     .map(userMapper::toUserResponse)
+		                     .toList();
+
+	}
+
+	//	@PreAuthorize("hasRole('ADMIN')")
+	@PostAuthorize("returnObject.username == authentication.name")
 	public UserResponse getUserById(String userId) {
+		log.info("In method get Users by ID");
 		return userMapper.toUserResponse(userRepository.findById(userId)
 		                                               .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND)));
 	}
